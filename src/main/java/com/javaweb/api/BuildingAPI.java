@@ -20,8 +20,8 @@ public class BuildingAPI {
 	public List<BuildingDTO> getBuilding(@RequestParam(value = "name", required = false) String name,
 										@RequestParam(value = "districtid", required = false) Long district){
 		List<BuildingDTO> result = buildingService.findAll(name, district);
-		return result;
-	
+		return result;	
+		
 	}
 //	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException {
 //		if(buildingDTO.getName() == null || buildingDTO.getNumberOfBasement() == null || buildingDTO.getName().equals("")) {
