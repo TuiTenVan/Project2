@@ -1,6 +1,9 @@
 package com.javaweb.api;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,13 +19,31 @@ public class BuildingAPI {
 	
 	@Autowired
 	private BuildingService buildingService;
-	@GetMapping(value="/api/building/")
-	public List<BuildingDTO> getBuilding(@RequestParam(value = "name", required = false) String name,
-										@RequestParam(value = "districtid", required = false) Long district){
-		List<BuildingDTO> result = buildingService.findAll(name, district);
+
+	@GetMapping(value = "/api/building/")
+	public List<BuildingDTO> getBuilding(@RequestParam Map<String, String> params,
+            						@RequestParam(value = "typeCode", required = false) List<String> typeCode) {
+		Map<String, Object> conditions = new LinkedHashMap<>();
+		conditions.put("name", params.get("name"));
+		conditions.put("districtId", params.get("districtId"));
+		conditions.put("floorArea", params.get("floorArea"));
+		conditions.put("street", params.get("street"));
+		conditions.put("ward", params.get("ward"));
+		conditions.put("numberOfBasement", params.get("numberOfBasement"));
+		conditions.put("direction", params.get("direction"));
+		conditions.put("level", params.get("level"));
+		conditions.put("managerName", params.get("managerName"));
+		conditions.put("managerPhoneNumber", params.get("managerPhoneNumber"));
+		conditions.put("minRentPrice", params.get("minRentPrice"));
+		conditions.put("maxRentPrice", params.get("maxRentPrice"));
+		conditions.put("minRentArea", params.get("minRentArea"));
+		conditions.put("maxRentArea", params.get("maxRentArea"));
+		conditions.put("typeCode", typeCode);
+		conditions.put("id", params.get("id"));
+		List<BuildingDTO> result = buildingService.findAll(conditions);
 		return result;
-	
 	}
+
 //	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException {
 //		if(buildingDTO.getName() == null || buildingDTO.getNumberOfBasement() == null || buildingDTO.getName().equals("")) {
 //			throw new FieldRequiredException("name or numberOfBasement is null!");
