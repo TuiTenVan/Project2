@@ -23,6 +23,7 @@ public class BuildingAPI {
 	public List<BuildingDTO> getBuilding(@RequestParam Map<String, Object> conditions) {
 		List<BuildingDTO> result = buildingService.findAll(conditions);
 		return result;
+
 	}
 
 //	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException {
