@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.javaweb.Model.BuildingDTO;
 import com.javaweb.service.BuildingService;
 
-
+//duong van du da xuat hien
 @RestController
 public class BuildingAPI {
 	
