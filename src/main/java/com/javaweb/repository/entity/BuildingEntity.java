@@ -3,13 +3,13 @@ package com.javaweb.repository.entity;
 public class BuildingEntity {
 	private String name;
 	private Integer floorArea;
-	private Integer districtId;
+	private String districtId;
 	private String street;
 	private String ward;
 	private Integer numberOfBasement;
 	private String direction;
 	private String level;
-	private Integer rentArea;
+	private String rentArea;
 	private Integer rentPrice;
 	private String managerName;
 	private String managerPhoneNumber;
@@ -29,10 +29,10 @@ public class BuildingEntity {
 	public void setFloorArea(Integer floorArea) {
 		this.floorArea = floorArea;
 	}
-	public Integer getDistrictId() {
+	public String getDistrictId() {
 		return districtId;
 	}
-	public void setDistrictId(Integer district) {
+	public void setDistrictId(String district) {
 		this.districtId = district;
 	}
 	public String getStreet() {
@@ -65,12 +65,15 @@ public class BuildingEntity {
 	public void setLevel(String level) {
 		this.level = level;
 	}
-	public Integer getRentArea() {
+
+	public String getRentArea() {
 		return rentArea;
 	}
-	public void setRentArea(Integer rentArea) {
+
+	public void setRentArea(String rentArea) {
 		this.rentArea = rentArea;
 	}
+
 	public Integer getRentPrice() {
 		return rentPrice;
 	}

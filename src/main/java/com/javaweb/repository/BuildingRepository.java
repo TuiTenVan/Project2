@@ -6,5 +6,6 @@ import java.util.Map;
 import com.javaweb.repository.entity.BuildingEntity;
 
 public interface BuildingRepository {
+
 	List<BuildingEntity> findAll(Map<String, Object> conditions);
 }

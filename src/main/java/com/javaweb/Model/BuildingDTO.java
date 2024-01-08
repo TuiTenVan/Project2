@@ -8,7 +8,7 @@ public class BuildingDTO {
 	private String managerPhoneNumber;
 	private Integer floorArea;
 	private Integer emptyArea;
-	private Integer rentArea;
+	private String rentArea;
 	private Integer rentPrice;
 	private String serviceFee;
 	private String brokerageFee;
@@ -54,10 +54,10 @@ public class BuildingDTO {
 	public void setEmptyArea(Integer emptyArea) {
 		this.emptyArea = emptyArea;
 	}
-	public Integer getRentArea() {
+	public String getRentArea() {
 		return rentArea;
 	}
-	public void setRentArea(Integer rentArea) {
+	public void setRentArea(String rentArea) {
 		this.rentArea = rentArea;
 	}
 	public Integer getRentPrice() {

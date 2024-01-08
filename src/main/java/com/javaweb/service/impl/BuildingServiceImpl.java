@@ -25,12 +25,11 @@ public class BuildingServiceImpl implements BuildingService {
 		for(BuildingEntity item : buildingEntities) {
 			BuildingDTO building = new BuildingDTO();
 			building.setName(item.getName());
-			building.setAddress(item.getStreet() + ", " + item.getWard() + ", Quận " + item.getDistrictId());
+			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " + item.getDistrictId());
 			building.setNumberOfBasement(item.getNumberOfBasement());
 			building.setManagerName(item.getManagerName());
 			building.setManagerPhoneNumber(item.getManagerPhoneNumber());
 			building.setFloorArea(item.getFloorArea());
-//			building.setEmptyArea(item.get);
 			building.setRentArea(item.getRentArea());
 			building.setRentPrice(item.getRentPrice());
 			building.setServiceFee(item.getServiceFee());
