@@ -3,8 +3,17 @@ package com.javaweb.repository.entity;
 public class DistrictEntity {
     private String code;
     private String name;
+    private Integer id;
+    
+    public Integer getId() {
+		return id;
+	}
 
-    public String getCode() {
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getCode() {
         return code;
     }
 

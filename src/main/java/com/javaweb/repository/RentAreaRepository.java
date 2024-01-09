@@ -1,12 +1,9 @@
 package com.javaweb.repository;
 
-import com.javaweb.repository.entity.BuildingEntity;
+import java.util.List;
+
 import com.javaweb.repository.entity.RentAreaEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 public interface RentAreaRepository {
-    List<RentAreaEntity> findAll(Integer rentArea);
+    List<RentAreaEntity> findAll(Object rentArea);
 }

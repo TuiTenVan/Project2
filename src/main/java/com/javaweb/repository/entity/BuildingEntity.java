@@ -1,6 +1,7 @@
 package com.javaweb.repository.entity;
 
 public class BuildingEntity {
+	private Integer id;
 	private String name;
 	private Integer floorArea;
 	private String districtId;
@@ -17,6 +18,13 @@ public class BuildingEntity {
 	private String code;
 	private String serviceFee;
 	private String brokerageFee;
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	public String getName() {
 		return name;
 	}

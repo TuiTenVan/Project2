@@ -3,8 +3,17 @@ package com.javaweb.repository.entity;
 public class RentAreaEntity {
     private Integer value;
     private Integer buildingId;
+    private Integer id;
+    
+    public Integer getId() {
+		return id;
+	}
 
-    public Integer getValue() {
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getValue() {
         return value;
     }
 

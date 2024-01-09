@@ -23,38 +23,44 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 	
 	@Override
 	public List<BuildingEntity> findAll(Map<String, Object> conditions) {
-	    StringBuilder sql = new StringBuilder("SELECT DISTINCT b.*, d.*, r.*, " +
-				"(SELECT GROUP_CONCAT(DISTINCT ra.value) " +
-				"FROM rentarea ra WHERE b.id = ra.buildingid ) " +
-				"AS rentAreas " +
-				"FROM building b ");
-		sql.append("JOIN district d ON b.districtid = d.id ");
-		sql.append(("JOIN rentarea r ON b.id = r.buildingid "));
-		boolean hasTypeCodeCondition = conditions.containsKey("typeCode")
-				&& conditions.get("typeCode") != null && !conditions.get("typeCode").toString().isEmpty();
+	    StringBuilder sql = new StringBuilder("SELECT DISTINCT b.id, b.* FROM building b ");
 
-		if(hasTypeCodeCondition) {
-			sql.append("JOIN buildingrenttype bt ON b.id = bt.buildingid ");
-			sql.append("JOIN renttype rt ON bt.renttypeid = rt.id ");
-		}
-		boolean hasStaffIdCondition = conditions.containsKey("staffId")
-				&& conditions.get("staffId") != null && !conditions.get("staffId").toString().isEmpty();
+	    sql.append(("JOIN rentarea r ON b.id = r.buildingid "));
+	    boolean hasTypeCodeCondition = hasCondition(conditions, "typeCode");
 
-		if(hasStaffIdCondition) {
-			sql.append("JOIN assignmentbuilding ass ON b.id = ass.buildingid ");
-			sql.append("JOIN user u ON ass.staffid = u.id ");
-		}
+	    if (hasTypeCodeCondition) {
+	        sql.append("JOIN buildingrenttype bt ON b.id = bt.buildingid ");
+	        sql.append("JOIN renttype rt ON bt.renttypeid = rt.id ");
+	    }
+
+	    boolean hasStaffIdCondition = hasCondition(conditions, "staffId");
+
+	    if (hasStaffIdCondition) {
+	        sql.append("JOIN assignmentbuilding ass ON b.id = ass.buildingid ");
+	        sql.append("JOIN user u ON ass.staffid = u.id ");
+	    }
 
 	    sql.append("WHERE 1 = 1 ");
 	    appendConditions(sql, conditions);
 	    return executeQuery(sql.toString());
 	}
+
+	private boolean hasCondition(Map<String, Object> conditions, String conditionKey) {
+	    return conditions.containsKey(conditionKey)
+	            && conditions.get(conditionKey) != null
+	            && !conditions.get(conditionKey).toString().isEmpty();
+	}
+	
 	private void appendConditions(StringBuilder sql, Map<String, Object> conditions) {
 	    for (Map.Entry<String, Object> entry : conditions.entrySet()) {
 	        String field = entry.getKey();
 	        Object value = entry.getValue();
 			if(value instanceof String && !((String) value).isEmpty()) {
-				if (field.equals("minRentPrice")) {
+				if(field.equals("districtId")) {
+					Integer tmp = Integer.parseInt(conditions.get(field).toString());
+					sql.append("AND b." + field + " = " + tmp + " ");
+				}
+				else if (field.equals("minRentPrice")) {
 					Integer minRentPrice = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND b.rentprice >= " + minRentPrice + " ");
 				}
@@ -83,7 +89,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 					sql.append("AND u.id" + " = " + staffId + " ");
 				}
 				else{
-					if (field.equals("floorArea") || field.equals("numberOfBasement") || field.equals("districtId")) {
+					if (field.equals("floorArea") || field.equals("numberOfBasement") ) {
 						Integer tmp = Integer.parseInt(conditions.get(field).toString());
 						sql.append("AND b." + field + " = " + tmp + " ");
 					} else {
@@ -108,8 +114,8 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 				building.setRentPrice(rs.getInt("rentPrice"));
 				building.setManagerName(rs.getString("managerName"));
 				building.setManagerPhoneNumber(rs.getString("managerPhoneNumber"));
-				building.setRentArea(rs.getString("rentAreas"));
-				building.setDistrictId(rs.getString("d.name"));
+				building.setDistrictId(rs.getString("districtid"));
+				building.setId(rs.getInt("id"));
 				result.add(building);
 			}
 		} catch(SQLException e) {

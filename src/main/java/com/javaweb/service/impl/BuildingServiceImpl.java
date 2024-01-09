@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.javaweb.Model.BuildingDTO;
 import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.DistrictRepository;
+import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.entity.BuildingEntity;
+import com.javaweb.repository.entity.RentAreaEntity;
 import com.javaweb.service.BuildingService;
 
 @Service
@@ -17,6 +20,11 @@ public class BuildingServiceImpl implements BuildingService {
 	
 	@Autowired
 	private BuildingRepository buildingRepository;
+	@Autowired
+	private DistrictRepository districtRepository;
+	@Autowired
+	private RentAreaRepository rentAreaRepository;
+	
 	@Override
 	public List<BuildingDTO> findAll(Map<String, Object> conditions) {
 		// TODO Auto-generated method stub
@@ -25,13 +33,21 @@ public class BuildingServiceImpl implements BuildingService {
 		for(BuildingEntity item : buildingEntities) {
 			BuildingDTO building = new BuildingDTO();
 			building.setName(item.getName());
-			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " + item.getDistrictId());
+			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " + districtRepository.findOne(item.getDistrictId()).getName());
 			building.setNumberOfBasement(item.getNumberOfBasement());
 			building.setManagerName(item.getManagerName());
 			building.setManagerPhoneNumber(item.getManagerPhoneNumber());
 			building.setFloorArea(item.getFloorArea());
-			building.setRentArea(item.getRentArea());
+			
+			List<RentAreaEntity> rentAreas = rentAreaRepository.findAll(item.getId());
+			String rentArea = "";
+			for(RentAreaEntity rent : rentAreas) {
+				rentArea += rent.getValue() + " ";
+			}
+			building.setRentArea(rentArea.trim());
+			
 			building.setRentPrice(item.getRentPrice());
+			
 			building.setServiceFee(item.getServiceFee());
 			building.setBrokerageFee(item.getBrokerageFee());
 			result.add(building);
