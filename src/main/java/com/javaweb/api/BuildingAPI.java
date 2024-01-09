@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.javaweb.Model.BuildingDTO;
 import com.javaweb.service.BuildingService;
 
+//Van's project2
 @RestController
 public class BuildingAPI {
 	
