@@ -23,13 +23,13 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 	
 	@Override
 	public List<BuildingEntity> findAll(Map<String, Object> conditions) {
-	    StringBuilder sql = new StringBuilder("SELECT DISTINCT b.*, d.*, " +
+	    StringBuilder sql = new StringBuilder("SELECT DISTINCT b.*, d.*, r.*, " +
 				"(SELECT GROUP_CONCAT(DISTINCT ra.value) " +
 				"FROM rentarea ra WHERE b.id = ra.buildingid ) " +
 				"AS rentAreas " +
 				"FROM building b ");
 		sql.append("JOIN district d ON b.districtid = d.id ");
-
+		sql.append(("JOIN rentarea r ON b.id = r.buildingid "));
 		boolean hasTypeCodeCondition = conditions.containsKey("typeCode")
 				&& conditions.get("typeCode") != null && !conditions.get("typeCode").toString().isEmpty();
 
@@ -64,11 +64,11 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 				}
 				else if (field.equals("minRentArea")) {
 					Integer minRentArea = Integer.parseInt(conditions.get(field).toString());
-					sql.append("AND ra.value >= " + minRentArea + " ");
+					sql.append("AND r.value >= " + minRentArea + " ");
 				}
 				else if (field.equals("maxRentArea")) {
 					Integer maxRentArea = Integer.parseInt(conditions.get(field).toString());
-					sql.append("AND ra.value <= " + maxRentArea + " ");
+					sql.append("AND r.value <= " + maxRentArea + " ");
 				}
 				else if (field.equals("typeCode")) {
 					sql.append("AND (rt.code = ");
