@@ -60,22 +60,27 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 					Integer tmp = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND b." + field + " = " + tmp + " ");
 				}
+
 				else if (field.equals("minRentPrice")) {
 					Integer minRentPrice = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND b.rentprice >= " + minRentPrice + " ");
 				}
+
 				else if (field.equals("maxRentPrice")) {
 					Integer maxRentPrice = Integer.parseInt(conditions.get(field).toString()) ;
 					sql.append("AND b.rentprice <= " + maxRentPrice + " ");
 				}
+
 				else if (field.equals("minRentArea")) {
 					Integer minRentArea = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND r.value >= " + minRentArea + " ");
 				}
+
 				else if (field.equals("maxRentArea")) {
 					Integer maxRentArea = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND r.value <= " + maxRentArea + " ");
 				}
+
 				else if (field.equals("typeCode")) {
 					sql.append("AND (rt.code = ");
 					String[] typeCodes = conditions.get(field).toString().split(",");
@@ -84,10 +89,12 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 					}
 					sql.append("'" + typeCodes[typeCodes.length - 1].trim() + "') ");
 				}
+
 				else if (field.equals("staffId")) {
 					Integer staffId = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND u.id" + " = " + staffId + " ");
 				}
+
 				else{
 					if (field.equals("floorArea") || field.equals("numberOfBasement") ) {
 						Integer tmp = Integer.parseInt(conditions.get(field).toString());

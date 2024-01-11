@@ -33,7 +33,10 @@ public class BuildingServiceImpl implements BuildingService {
 		for(BuildingEntity item : buildingEntities) {
 			BuildingDTO building = new BuildingDTO();
 			building.setName(item.getName());
-			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " + districtRepository.findOne(item.getDistrictId()).getName());
+
+			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " +
+					districtRepository.findOne(item.getDistrictId()).getName());
+
 			building.setNumberOfBasement(item.getNumberOfBasement());
 			building.setManagerName(item.getManagerName());
 			building.setManagerPhoneNumber(item.getManagerPhoneNumber());
@@ -45,9 +48,8 @@ public class BuildingServiceImpl implements BuildingService {
 				rentArea += rent.getValue() + " ";
 			}
 			building.setRentArea(rentArea.trim());
-			
+
 			building.setRentPrice(item.getRentPrice());
-			
 			building.setServiceFee(item.getServiceFee());
 			building.setBrokerageFee(item.getBrokerageFee());
 			result.add(building);
