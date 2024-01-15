@@ -45,9 +45,10 @@ public class BuildingServiceImpl implements BuildingService {
 			List<RentAreaEntity> rentAreas = rentAreaRepository.findAll(item.getId());
 			String rentArea = "";
 			for(RentAreaEntity rent : rentAreas) {
-				rentArea += rent.getValue() + " ";
+				rentArea += rent.getValue() + ", ";
 			}
-			building.setRentArea(rentArea.trim());
+			rentArea = rentArea.substring(0, rentArea.length() - 2);
+			building.setRentArea(rentArea);
 
 			building.setRentPrice(item.getRentPrice());
 			building.setServiceFee(item.getServiceFee());

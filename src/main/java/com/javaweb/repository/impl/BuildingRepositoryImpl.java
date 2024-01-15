@@ -61,7 +61,7 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 					sql.append("AND b." + field + " = " + tmp + " ");
 				}
 
-				else if (field.equals("minRentPrice")) {
+				else if (field.equals("minRentPrice") ) {
 					Integer minRentPrice = Integer.parseInt(conditions.get(field).toString());
 					sql.append("AND b.rentprice >= " + minRentPrice + " ");
 				}
