@@ -26,14 +26,15 @@ public class BuildingServiceImpl implements BuildingService {
 	private RentAreaRepository rentAreaRepository;
 	
 	@Override
-	public List<BuildingDTO> findAll(Map<String, Object> conditions) {
+	public List<BuildingDTO> findAll(Map<String, Object> conditions, List<String> typeCode) {
 		// TODO Auto-generated method stub
-		List<BuildingEntity> buildingEntities = buildingRepository.findAll(conditions);
+		List<BuildingEntity> buildingEntities = buildingRepository.findAll(conditions, typeCode);
 		List<BuildingDTO> result = new ArrayList<BuildingDTO>();
+
 		for(BuildingEntity item : buildingEntities) {
 			BuildingDTO building = new BuildingDTO();
-			building.setName(item.getName());
 
+			building.setName(item.getName());
 			building.setAddress(item.getStreet() + ", " + item.getWard() + ", " +
 					districtRepository.findOne(item.getDistrictId()).getName());
 
