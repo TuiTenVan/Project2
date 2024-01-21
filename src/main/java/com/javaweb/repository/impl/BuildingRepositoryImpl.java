@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.javaweb.Utils.NumberUtil;
 import com.javaweb.Utils.StringUtil;
@@ -34,12 +35,6 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		if(typeCode != null && typeCode.size() > 0){
 			sql.append(" JOIN buildingrenttype bt ON b.id = bt.buildingid ");
 			sql.append(" JOIN renttype rt ON bt.renttypeid = rt.id ");
-		}
-
-		String areaTo = (String)(conditions.get("areaTo"));
-		String areaFrom = (String)(conditions.get("areaFrom"));
-		if(StringUtil.checkString(areaTo) || StringUtil.checkString(areaFrom)){
-			sql.append((" JOIN rentarea r ON b.id = r.buildingid "));
 		}
 	}
 	public static void queryNormal(StringBuilder sql, Map<String, Object> conditions){
@@ -71,12 +66,14 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		String areaTo = (String)(conditions.get("areaTo"));
 		String areaFrom = (String)(conditions.get("areaFrom"));
 		if(StringUtil.checkString(areaTo) || StringUtil.checkString(areaFrom)){
+			sql.append(" AND EXISTS (SELECT * FROM rentarea r WHERE b.id = r.buildingid ");
 			if(StringUtil.checkString(areaFrom)){
 				sql.append("AND r.value >= " + areaFrom + " ");
 			}
 			if(StringUtil.checkString(areaTo)){
 				sql.append("AND r.value <= " + areaTo + " ");
 			}
+			sql.append(") ");
 		}
 
 		String rentPriceTo = (String)(conditions.get("rentPriceTo"));
@@ -91,11 +88,14 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		}
 
 		if(typeCode != null && typeCode.size() > 0){
-			List<String> code = new ArrayList<>();
-			for(String s : typeCode) {
-				code.add("'" + s + "'");
-			}
-			sql.append("AND rt.code IN(" + String.join(", ", code) + ")");
+//			List<String> code = new ArrayList<>();
+//			for(String s : typeCode) {
+//				code.add("'" + s + "'");
+//			}
+//			sql.append("AND rt.code IN(" + String.join(", ", code) + ")");
+			sql.append(" AND (");
+			String tmp = typeCode.stream().map(it-> "rt.code = " + "'" + it + "'").collect(Collectors.joining(" OR "));
+			sql.append(tmp + " ) ");
 		}
 	}
 	@Override
