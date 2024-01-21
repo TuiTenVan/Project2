@@ -1,5 +1,6 @@
 package com.javaweb.repository.impl;
 
+import com.javaweb.Utils.ConnectionJDBC;
 import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.DistrictEntity;
@@ -15,9 +16,6 @@ import java.util.Map;
 @Repository
 public class RentAreaRepositoryImpl implements RentAreaRepository {
 
-	static String URL = "jdbc:mysql://localhost:3306/estatebasic";
-	static String USER = "root";
-	static String PASS = "Nvv@02022003";;
 	@Override
     public List<RentAreaEntity> findAll(Object rent) {
 
@@ -31,7 +29,7 @@ public class RentAreaRepositoryImpl implements RentAreaRepository {
     	List<RentAreaEntity> result = new ArrayList<>();
 
         try(
-                Connection connect = DriverManager.getConnection(URL, USER, PASS);
+                Connection connect = ConnectionJDBC.getConnection();
                 Statement stm = connect.createStatement();
                 ResultSet rs = stm.executeQuery(sql.toString());)
             {

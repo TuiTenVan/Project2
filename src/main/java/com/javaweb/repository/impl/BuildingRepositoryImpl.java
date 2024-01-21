@@ -1,5 +1,6 @@
 package com.javaweb.repository.impl;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -11,8 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.javaweb.Utils.ConnectionJDBC;
 import com.javaweb.Utils.NumberUtil;
 import com.javaweb.Utils.StringUtil;
+import com.javaweb.builder.BuildingSearchBuilder;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.repository.BuildingRepository;
@@ -20,73 +23,73 @@ import com.javaweb.repository.entity.BuildingEntity;
 
 @Repository
 public class BuildingRepositoryImpl implements BuildingRepository {
-	static String URL = "jdbc:mysql://localhost:3306/estatebasic";
-	static String USER = "root";
-	static String PASS = "Nvv@02022003";
 
-	private void joinTable(Map<String, Object> conditions, List<String> typeCode, StringBuilder sql) {
+	private void joinTable(BuildingSearchBuilder buildingSearchBuildere, StringBuilder sql) {
 
-		String staffId = (String) conditions.get("staffId");
-		if(StringUtil.checkString(staffId)) {
+		Integer staffId = buildingSearchBuildere.getStaffId();
+		if(staffId != null) {
 			sql.append(" JOIN assignmentbuilding ass ON b.id = ass.buildingid ");
 			sql.append(" JOIN user u ON ass.staffid = u.id ");
 		}
-
+		List<String> typeCode = buildingSearchBuildere.getTypeCode();
 		if(typeCode != null && typeCode.size() > 0){
 			sql.append(" JOIN buildingrenttype bt ON b.id = bt.buildingid ");
 			sql.append(" JOIN renttype rt ON bt.renttypeid = rt.id ");
 		}
 	}
-	public static void queryNormal(StringBuilder sql, Map<String, Object> conditions){
-		for(Map.Entry<String, Object> item : conditions.entrySet()){
-
-			if(!item.getKey().equals("staffId") && !item.getKey().equals("typeCode")
-					&& !item.getKey().startsWith("rentPrice") && !item.getKey().startsWith("area")){
-
-				String value = item.getValue().toString();
-				if(StringUtil.checkString(value)){
-
-					if(NumberUtil.isNumber(value)){
-						sql.append("AND b." + item.getKey() + " = " + value + " ");
-					}
-
-					else{
-						sql.append("AND b." + item.getKey() + " LIKE '%" + item.getValue() + "%' ");
+	public static void queryNormal(StringBuilder sql, BuildingSearchBuilder buildingSearchBuilder){
+		try{
+			Field[] fields = BuildingSearchBuilder.class.getDeclaredFields();
+			for(Field item : fields){
+				item.setAccessible(true);
+				String fieldName = item.getName();
+				if(!fieldName.equals("staffId") && !fieldName.equals("typeCode")
+					&& !fieldName.startsWith("rentPrice") && !fieldName.startsWith("area")) {
+					Object value = item.get(buildingSearchBuilder);
+					if(value != null && !value.toString().isEmpty()) {
+						if (item.getType().getName().equals("java.lang.Integer")) {
+							sql.append("AND b." + fieldName + " = " + value + " ");
+						} else {
+							sql.append("AND b." + fieldName + " LIKE '%" + value + "%' ");
+						}
 					}
 				}
 			}
 		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 	}
-	public static void querySpecial(StringBuilder sql, Map<String, Object> conditions, List<String> typeCode){
-		String staffId = (String) conditions.get("staffId");
-		if(StringUtil.checkString(staffId)){
+	public static void querySpecial(StringBuilder sql, BuildingSearchBuilder buildingSearchBuilder){
+		Integer staffId = buildingSearchBuilder.getStaffId();
+		if(staffId != null){
 			sql.append("AND u.id" + " = " + staffId + " ");
 		}
 
-		String areaTo = (String)(conditions.get("areaTo"));
-		String areaFrom = (String)(conditions.get("areaFrom"));
-		if(StringUtil.checkString(areaTo) || StringUtil.checkString(areaFrom)){
+		Integer areaTo = buildingSearchBuilder.getAreaTo();
+		Integer areaFrom = buildingSearchBuilder.getAreaFrom();
+		if(areaFrom != null || areaTo != null){
 			sql.append(" AND EXISTS (SELECT * FROM rentarea r WHERE b.id = r.buildingid ");
-			if(StringUtil.checkString(areaFrom)){
+			if(areaFrom != null){
 				sql.append("AND r.value >= " + areaFrom + " ");
 			}
-			if(StringUtil.checkString(areaTo)){
+			if(areaTo != null){
 				sql.append("AND r.value <= " + areaTo + " ");
 			}
 			sql.append(") ");
 		}
 
-		String rentPriceTo = (String)(conditions.get("rentPriceTo"));
-		String rentPriceFrom = (String)(conditions.get("rentPriceFrom"));
-		if(StringUtil.checkString(rentPriceTo) || StringUtil.checkString(rentPriceFrom)){
-			if(StringUtil.checkString(rentPriceFrom)){
+		Integer rentPriceTo = buildingSearchBuilder.getRentPriceTo();
+		Integer rentPriceFrom = buildingSearchBuilder.getRentPriceFrom();
+		if(rentPriceFrom != null || rentPriceTo != null){
+			if(rentPriceFrom != null){
 				sql.append("AND b.rentprice >= " + rentPriceFrom + " ");
 			}
-			if(StringUtil.checkString(rentPriceTo)){
+			if(rentPriceTo != null){
 				sql.append("AND b.rentprice <= " + rentPriceTo + " ");
 			}
 		}
-
+		List<String> typeCode = buildingSearchBuilder.getTypeCode();
 		if(typeCode != null && typeCode.size() > 0){
 			sql.append(" AND (");
 			String tmp = typeCode.stream().map(it-> "rt.code = " + "'" + it + "'").collect(Collectors.joining(" OR "));
@@ -94,12 +97,12 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		}
 	}
 	@Override
-	public List<BuildingEntity> findAll(Map<String, Object> conditions, List<String> typeCode) {
+	public List<BuildingEntity> findAll( BuildingSearchBuilder buildingSearchBuilder) {
 	    StringBuilder sql = new StringBuilder("SELECT b.* FROM building b ");
-		joinTable(conditions, typeCode, sql);
+		joinTable(buildingSearchBuilder, sql);
 	    sql.append("WHERE 1 = 1 ");
-	    queryNormal(sql, conditions);
-		querySpecial(sql, conditions, typeCode);
+	    queryNormal(sql, buildingSearchBuilder);
+		querySpecial(sql, buildingSearchBuilder);
 		sql.append(" GROUP BY b.id");
 	    return executeQuery(sql.toString());
 	}
@@ -107,9 +110,9 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 	public List<BuildingEntity> executeQuery(String sql){
 		List<BuildingEntity> result = new ArrayList<>();
 
-		try(Connection connect = DriverManager.getConnection(URL, USER, PASS);
-				Statement statement = connect.createStatement();
-				ResultSet rs = statement.executeQuery(sql);){
+		try(Connection connect = ConnectionJDBC.getConnection();
+			Statement statement = connect.createStatement();
+			ResultSet rs = statement.executeQuery(sql);){
 
 			while(rs.next()) {
 				BuildingEntity building = new BuildingEntity();

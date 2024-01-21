@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.javaweb.Utils.ConnectionJDBC;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.repository.DistrictRepository;
@@ -14,9 +15,6 @@ import com.javaweb.repository.entity.DistrictEntity;
 
 @Repository
 public class DistrictRepositoryImpl implements DistrictRepository {
-	static String URL = "jdbc:mysql://localhost:3306/estatebasic";
-	static String USER = "root";
-	static String PASS = "Nvv@02022003";;
 
     public DistrictEntity findOne(Object districtId) {
 
@@ -30,7 +28,7 @@ public class DistrictRepositoryImpl implements DistrictRepository {
         DistrictEntity result = new DistrictEntity();
 
         try(
-                Connection connect = DriverManager.getConnection(URL, USER, PASS);
+                Connection connect = ConnectionJDBC.getConnection();
                 Statement stm = connect.createStatement();
                 ResultSet rs = stm.executeQuery(sql.toString());)
             {
