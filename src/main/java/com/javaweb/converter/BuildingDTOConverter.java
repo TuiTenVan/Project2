@@ -29,8 +29,6 @@ public class BuildingDTOConverter {
         List<RentAreaEntity> rentAreas = rentAreaRepository.findAll(item.getId());
         String rentArea = rentAreas.stream().map(it->it.getValue().toString()).collect(Collectors.joining(", "));
         building.setRentArea(rentArea);
-
-
         return building;
     }
 }
