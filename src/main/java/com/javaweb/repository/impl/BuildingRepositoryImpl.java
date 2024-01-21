@@ -88,11 +88,6 @@ public class BuildingRepositoryImpl implements BuildingRepository {
 		}
 
 		if(typeCode != null && typeCode.size() > 0){
-//			List<String> code = new ArrayList<>();
-//			for(String s : typeCode) {
-//				code.add("'" + s + "'");
-//			}
-//			sql.append("AND rt.code IN(" + String.join(", ", code) + ")");
 			sql.append(" AND (");
 			String tmp = typeCode.stream().map(it-> "rt.code = " + "'" + it + "'").collect(Collectors.joining(" OR "));
 			sql.append(tmp + " ) ");
