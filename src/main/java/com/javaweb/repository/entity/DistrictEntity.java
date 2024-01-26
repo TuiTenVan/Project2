@@ -1,9 +1,33 @@
 package com.javaweb.repository.entity;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name="district")
+
 public class DistrictEntity {
-    private String code;
-    private String name;
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @OneToMany(mappedBy = "district", fetch = FetchType.LAZY)
+    private List<BuildingEntity> items = new ArrayList<>();
+
+    public List<BuildingEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<BuildingEntity> items) {
+        this.items = items;
+    }
+    
+    @Column(name="code")
+    private String code;
+    @Column(name="name")
+    private String name;
     
     public Integer getId() {
 		return id;

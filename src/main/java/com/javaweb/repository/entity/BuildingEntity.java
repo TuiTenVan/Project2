@@ -1,22 +1,65 @@
 package com.javaweb.repository.entity;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name="building")
 public class BuildingEntity {
+	
+	@ManyToOne
+	@JoinColumn(name="districtid")
+	private DistrictEntity district;
+
+	public DistrictEntity getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(DistrictEntity district) {
+		this.district = district;
+	}
+
+	@OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
+	private List<RentAreaEntity> items = new ArrayList<>();
+
+	public List<RentAreaEntity> getItems() {
+		return items;
+	}
+	public void setItems(List<RentAreaEntity> items) {
+		this.items = items;
+	}
+	
+	@Id // khóa chính
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //tự động tăng
 	private Integer id;
+	@Column(name="name")
 	private String name;
+	@Column(name="floorarea")
 	private Integer floorArea;
-	private String districtId;
+//	@Column(name="districtid")
+//	private String districtId;
+	@Column(name="street")
 	private String street;
+	@Column(name="ward")
 	private String ward;
+	@Column(name="numberofbasement")
 	private Integer numberOfBasement;
+	@Column(name="direction")
 	private String direction;
+	@Column(name="level")
 	private String level;
+	@Column(name="rentarea")
 	private String rentArea;
+	@Column(name="rentprice")
 	private Integer rentPrice;
+	@Column(name="managername")
 	private String managerName;
+	@Column(name="managerphonenumber")
 	private String managerPhoneNumber;
-	private Integer staffId;
-	private String code;
+	@Column(name="servicefee")
 	private String serviceFee;
+	@Column(name="brokeragefee")
 	private String brokerageFee;
 	
 	public Integer getId() {
@@ -37,12 +80,12 @@ public class BuildingEntity {
 	public void setFloorArea(Integer floorArea) {
 		this.floorArea = floorArea;
 	}
-	public String getDistrictId() {
-		return districtId;
-	}
-	public void setDistrictId(String district) {
-		this.districtId = district;
-	}
+//	public String getDistrictId() {
+//		return districtId;
+//	}
+//	public void setDistrictId(String district) {
+//		this.districtId = district;
+//	}
 	public String getStreet() {
 		return street;
 	}
@@ -100,18 +143,7 @@ public class BuildingEntity {
 	public void setManagerPhoneNumber(String managerPhoneNumber) {
 		this.managerPhoneNumber = managerPhoneNumber;
 	}
-	public Integer getStaffId() {
-		return staffId;
-	}
-	public void setStaffId(Integer staff) {
-		this.staffId = staff;
-	}
-	public String getCode() {
-		return code;
-	}
-	public void setCode(String code) {
-		this.code = code;
-	}
+
 	public String getServiceFee() {
 		return serviceFee;
 	}

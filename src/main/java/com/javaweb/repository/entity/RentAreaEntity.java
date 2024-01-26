@@ -1,11 +1,35 @@
 package com.javaweb.repository.entity;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "rentarea")
 public class RentAreaEntity {
-    private Integer value;
-    private Integer buildingId;
-    private Integer id;
     
-    public Integer getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @ManyToOne
+    @JoinColumn(name = "buildingid")
+    private BuildingEntity building;
+
+    public BuildingEntity getBuilding() {
+        return building;
+    }
+
+    public void setBuilding(BuildingEntity building) {
+        this.building = building;
+    }
+
+    @Column(name = "value")
+    private Integer value;
+//    @Column(name = "buildingid")
+//    private Integer buildingId;
+    
+
+
+	public Integer getId() {
 		return id;
 	}
 
@@ -21,11 +45,11 @@ public class RentAreaEntity {
         this.value = value;
     }
 
-    public Integer getBuildingId() {
-        return buildingId;
-    }
-
-    public void setBuildingId(Integer buildingId) {
-        this.buildingId = buildingId;
-    }
+//    public Integer getBuildingId() {
+//        return buildingId;
+//    }
+//
+//    public void setBuildingId(Integer buildingId) {
+//        this.buildingId = buildingId;
+//    }
 }

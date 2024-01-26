@@ -1,20 +1,23 @@
 package com.javaweb.api;
 
+import com.javaweb.Model.BuildingDTO;
+import com.javaweb.service.BuildingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.javaweb.Model.BuildingDTO;
-import com.javaweb.service.BuildingService;
-
 //Van's project2
 @RestController
+@PropertySource("classpath:application.properties")
 public class BuildingAPI {
-	
+
+	@Value("${dev.nguyen}")
+	private String data;
+
 	@Autowired
 	private BuildingService buildingService;
 
@@ -36,10 +39,9 @@ public class BuildingAPI {
 //		return buildingDTO;
 //	}
 //
-//	@DeleteMapping(value="/api/building/{id}/{name}")
-//	public void deleteBuilding (@PathVariable Integer id,
-//								@PathVariable String name,
-//								@RequestParam(value="ward", required = false) String ward) {
+	@DeleteMapping(value="/api/building/{id}")
+	public void deleteBuilding (@PathVariable Integer id) {
 //		System.out.println("Da xoa " + id + " va " + name + " roi nhe!");
-//	}
+		System.out.println(data);
+	}
 }
