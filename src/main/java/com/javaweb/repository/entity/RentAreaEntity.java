@@ -22,10 +22,9 @@ public class RentAreaEntity {
         this.building = building;
     }
 
-    @Column(name = "value")
+    @Column(name = "value", nullable = false)
     private Integer value;
-//    @Column(name = "buildingid")
-//    private Integer buildingId;
+
     
 
 

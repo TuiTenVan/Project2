@@ -14,19 +14,19 @@ public class DistrictEntity {
     private Integer id;
 
     @OneToMany(mappedBy = "district", fetch = FetchType.LAZY)
-    private List<BuildingEntity> items = new ArrayList<>();
+    private List<BuildingEntity> districts = new ArrayList<>();
 
     public List<BuildingEntity> getItems() {
-        return items;
+        return districts;
     }
 
     public void setItems(List<BuildingEntity> items) {
-        this.items = items;
+        this.districts = items;
     }
     
-    @Column(name="code")
+    @Column(name="code", nullable = false)
     private String code;
-    @Column(name="name")
+    @Column(name="name", nullable = false)
     private String name;
     
     public Integer getId() {

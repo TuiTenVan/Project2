@@ -21,13 +21,13 @@ public class BuildingEntity {
 	}
 
 	@OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
-	private List<RentAreaEntity> items = new ArrayList<>();
+	private List<RentAreaEntity> buildings = new ArrayList<>();
 
 	public List<RentAreaEntity> getItems() {
-		return items;
+		return buildings;
 	}
 	public void setItems(List<RentAreaEntity> items) {
-		this.items = items;
+		this.buildings = items;
 	}
 	
 	@Id // khóa chính
