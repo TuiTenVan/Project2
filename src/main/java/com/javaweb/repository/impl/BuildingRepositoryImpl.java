@@ -12,7 +12,7 @@ import javax.persistence.Query;
 import java.util.List;
 
 @Repository
-@Primary
+
 public class BuildingRepositoryImpl  implements BuildingRepository {
     @PersistenceContext
     private EntityManager entityManager;

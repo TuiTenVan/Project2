@@ -1,40 +1,33 @@
 package com.javaweb.repository.impl;
 
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.javaweb.builder.BuildingSearchBuilder;
+import com.javaweb.repository.BuildingRepository;
+import com.javaweb.repository.entity.BuildingEntity;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-import com.javaweb.Utils.ConnectionJDBC;
-import com.javaweb.builder.BuildingSearchBuilder;
-import org.springframework.stereotype.Repository;
-
-import com.javaweb.repository.BuildingRepository;
-import com.javaweb.repository.entity.BuildingEntity;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
-
+@Primary
 public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 	
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	private void joinTable(BuildingSearchBuilder buildingSearchBuildere, StringBuilder sql) {
+	private void joinTable(BuildingSearchBuilder buildingSearchBuilder, StringBuilder sql) {
 
-		Integer staffId = buildingSearchBuildere.getStaffId();
+		Integer staffId = buildingSearchBuilder.getStaffId();
 		if(staffId != null) {
 			sql.append(" JOIN assignmentbuilding ass ON b.id = ass.buildingid ");
 			sql.append(" JOIN user u ON ass.staffid = u.id ");
 		}
-		List<String> typeCode = buildingSearchBuildere.getTypeCode();
+		List<String> typeCode = buildingSearchBuilder.getTypeCode();
 		if(typeCode != null && typeCode.size() > 0){
 			sql.append(" JOIN buildingrenttype bt ON b.id = bt.buildingid ");
 			sql.append(" JOIN renttype rt ON bt.renttypeid = rt.id ");
