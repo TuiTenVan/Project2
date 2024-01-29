@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+
 import com.javaweb.Utils.ConnectionJDBC;
 import com.javaweb.builder.BuildingSearchBuilder;
 import org.springframework.stereotype.Repository;
@@ -17,7 +21,11 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.entity.BuildingEntity;
 
 @Repository
+
 public class JDBCBuildingRepositoryImpl implements BuildingRepository {
+	
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	private void joinTable(BuildingSearchBuilder buildingSearchBuildere, StringBuilder sql) {
 
@@ -91,6 +99,7 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 			sql.append(tmp + " ) ");
 		}
 	}
+	
 	@Override
 	public List<BuildingEntity> findAll( BuildingSearchBuilder buildingSearchBuilder) {
 	    StringBuilder sql = new StringBuilder("SELECT b.* FROM building b ");
@@ -99,33 +108,7 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 	    queryNormal(sql, buildingSearchBuilder);
 		querySpecial(sql, buildingSearchBuilder);
 		sql.append(" GROUP BY b.id");
-	    return executeQuery(sql.toString());
-	}
-
-	public List<BuildingEntity> executeQuery(String sql){
-		List<BuildingEntity> result = new ArrayList<>();
-
-		try(Connection connect = ConnectionJDBC.getConnection();
-			Statement statement = connect.createStatement();
-			ResultSet rs = statement.executeQuery(sql);){
-
-			while(rs.next()) {
-				BuildingEntity building = new BuildingEntity();
-				building.setName(rs.getString("name"));
-				building.setStreet(rs.getString("street"));
-				building.setWard(rs.getString("ward"));
-				building.setNumberOfBasement(rs.getInt("numberOfBasement"));
-				building.setFloorArea(rs.getInt("floorArea"));
-				building.setRentPrice(rs.getInt("rentPrice"));
-				building.setManagerName(rs.getString("managerName"));
-				building.setManagerPhoneNumber(rs.getString("managerPhoneNumber"));
-				building.setId(rs.getInt("id"));
-				result.add(building);
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
+		Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
+	    return query.getResultList();
 	}
 }

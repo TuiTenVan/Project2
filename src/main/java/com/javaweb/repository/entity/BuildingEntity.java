@@ -23,13 +23,48 @@ public class BuildingEntity {
 	@OneToMany(mappedBy = "building", fetch = FetchType.LAZY)
 	private List<RentAreaEntity> buildings = new ArrayList<>();
 
+	public List<RentAreaEntity> getBuildings() {
+		return buildings;
+	}
+
+	public void setBuildings(List<RentAreaEntity> buildings) {
+		this.buildings = buildings;
+	}
+
+	public List<RentTypeEntity> getRentTypeEntities() {
+		return rentTypeEntities;
+	}
+
+	public void setRentTypeEntities(List<RentTypeEntity> rentTypeEntities) {
+		this.rentTypeEntities = rentTypeEntities;
+	}
+
 	public List<RentAreaEntity> getItems() {
 		return buildings;
 	}
 	public void setItems(List<RentAreaEntity> items) {
 		this.buildings = items;
 	}
-	
+
+	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)
+	private List<RentTypeEntity> rentTypeEntities = new ArrayList<>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "assignmentbuilding",
+			joinColumns = @JoinColumn(name = "buildingid", nullable = false),
+			inverseJoinColumns = @JoinColumn(name = "staffid", nullable = false)
+	)
+
+	private  List<UserEntity> users = new ArrayList<>();
+
+	public List<UserEntity> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<UserEntity> users) {
+		this.users = users;
+	}
+
 	@Id // khóa chính
 	@GeneratedValue(strategy = GenerationType.IDENTITY) //tự động tăng
 	private Integer id;
@@ -37,8 +72,7 @@ public class BuildingEntity {
 	private String name;
 	@Column(name="floorarea")
 	private Integer floorArea;
-//	@Column(name="districtid")
-//	private String districtId;
+
 	@Column(name="street")
 	private String street;
 	@Column(name="ward")
@@ -80,12 +114,7 @@ public class BuildingEntity {
 	public void setFloorArea(Integer floorArea) {
 		this.floorArea = floorArea;
 	}
-//	public String getDistrictId() {
-//		return districtId;
-//	}
-//	public void setDistrictId(String district) {
-//		this.districtId = district;
-//	}
+
 	public String getStreet() {
 		return street;
 	}

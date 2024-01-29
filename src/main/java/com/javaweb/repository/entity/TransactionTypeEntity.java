@@ -5,25 +5,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "role")
-public class RoleEntity {
+@Table(name = "transactiontype")
+public class TransactionTypeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(name="name", nullable = false)
+    @Column
     private String name;
-    @Column(name = "code", nullable = false, unique = true)
+    @Column
     private String code;
 
-    @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
-    private List<UserEntity> users = new ArrayList<>();
+    @ManyToMany(mappedBy = "transactions", fetch = FetchType.LAZY)
+    private List<CustomerEntity> customers = new ArrayList<>();
 
-    public List<UserEntity> getUsers() {
-        return users;
+    public List<CustomerEntity> getCustomers() {
+        return customers;
     }
 
-    public void setUsers(List<UserEntity> users) {
-        this.users = users;
+    public void setCustomers(List<CustomerEntity> customers) {
+        this.customers = customers;
     }
 
     public Integer getId() {
@@ -49,6 +49,4 @@ public class RoleEntity {
     public void setCode(String code) {
         this.code = code;
     }
-
-
 }

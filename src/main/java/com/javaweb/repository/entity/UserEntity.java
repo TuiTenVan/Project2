@@ -17,8 +17,46 @@ public class UserEntity {
     @Column(name="fullName", nullable = false)
     private String fullName;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<UserRoleEntity> users = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "assignmentcustomer",
+            joinColumns = @JoinColumn(name = "staffid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "customerid", nullable = false)
+    )
+    private List<CustomerEntity> customers = new ArrayList<>();
+
+    public List<CustomerEntity> getCustomers() {
+        return customers;
+    }
+
+    public void setCustomers(List<CustomerEntity> customers) {
+        this.customers = customers;
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_role",
+            joinColumns = @JoinColumn(name = "userid", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "roleid", nullable = false)
+    )
+    private List<RoleEntity> roles = new ArrayList<>();
+
+    public List<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY)
+    private List<BuildingEntity> buildings = new ArrayList<>();
+
+    public List<BuildingEntity> getBuildings() {
+        return buildings;
+    }
+
+    public void setBuildings(List<BuildingEntity> buildings) {
+        this.buildings = buildings;
+    }
+
+    public void setRoles(List<RoleEntity> roles) {
+        this.roles = roles;
+    }
 
     public Integer getId() {
         return id;
@@ -52,11 +90,4 @@ public class UserEntity {
         this.fullName = fullName;
     }
 
-    public List<UserRoleEntity> getItems() {
-        return users ;
-    }
-
-    public void setItems(List<UserRoleEntity> items) {
-        this.users  = items;
-    }
 }
