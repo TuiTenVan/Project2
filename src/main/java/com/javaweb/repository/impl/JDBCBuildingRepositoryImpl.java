@@ -94,7 +94,7 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 	}
 	
 	@Override
-	public List<BuildingEntity> findAll( BuildingSearchBuilder buildingSearchBuilder) {
+	public List<BuildingEntity> findAll(BuildingSearchBuilder buildingSearchBuilder) {
 	    StringBuilder sql = new StringBuilder("SELECT b.* FROM building b ");
 		joinTable(buildingSearchBuilder, sql);
 	    sql.append("WHERE 1 = 1 ");

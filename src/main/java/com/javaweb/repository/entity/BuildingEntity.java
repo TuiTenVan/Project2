@@ -39,12 +39,6 @@ public class BuildingEntity {
 		this.rentTypeEntities = rentTypeEntities;
 	}
 
-	public List<RentAreaEntity> getItems() {
-		return buildings;
-	}
-	public void setItems(List<RentAreaEntity> items) {
-		this.buildings = items;
-	}
 
 	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)
 	private List<RentTypeEntity> rentTypeEntities = new ArrayList<>();
@@ -83,8 +77,6 @@ public class BuildingEntity {
 	private String direction;
 	@Column(name="level")
 	private String level;
-	@Column(name="rentarea")
-	private String rentArea;
 	@Column(name="rentprice")
 	private Integer rentPrice;
 	@Column(name="managername")
@@ -146,13 +138,6 @@ public class BuildingEntity {
 		this.level = level;
 	}
 
-	public String getRentArea() {
-		return rentArea;
-	}
-
-	public void setRentArea(String rentArea) {
-		this.rentArea = rentArea;
-	}
 
 	public Integer getRentPrice() {
 		return rentPrice;

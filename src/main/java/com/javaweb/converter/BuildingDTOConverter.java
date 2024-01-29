@@ -20,7 +20,7 @@ public class BuildingDTOConverter {
         building.setAddress(item.getStreet() + ", " + item.getWard() + ", " +
                 item.getDistrict().getName());
 
-        List<RentAreaEntity> rentAreas = item.getItems();
+        List<RentAreaEntity> rentAreas = item.getBuildings();
         String rentArea = rentAreas.stream().map(it->it.getValue().toString()).collect(Collectors.joining(", "));
         building.setRentArea(rentArea);
         return building;
