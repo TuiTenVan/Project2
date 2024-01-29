@@ -31,6 +31,9 @@ public class BuildingEntity {
 		this.buildings = buildings;
 	}
 
+	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)
+	private List<RentTypeEntity> rentTypeEntities = new ArrayList<>();
+	
 	public List<RentTypeEntity> getRentTypeEntities() {
 		return rentTypeEntities;
 	}
@@ -38,10 +41,6 @@ public class BuildingEntity {
 	public void setRentTypeEntities(List<RentTypeEntity> rentTypeEntities) {
 		this.rentTypeEntities = rentTypeEntities;
 	}
-
-
-	@ManyToMany(mappedBy = "buildings",fetch = FetchType.LAZY)
-	private List<RentTypeEntity> rentTypeEntities = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "assignmentbuilding",
