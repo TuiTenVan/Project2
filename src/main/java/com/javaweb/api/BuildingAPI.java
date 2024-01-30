@@ -2,6 +2,7 @@ package com.javaweb.api;
 
 import com.javaweb.Model.BuildingDTO;
 import com.javaweb.Model.BuildingRequestDTO;
+import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.entity.BuildingEntity;
 import com.javaweb.repository.entity.DistrictEntity;
 import com.javaweb.service.BuildingService;
@@ -27,8 +28,12 @@ public class BuildingAPI {
 
 	@Autowired
 	private BuildingService buildingService;
+	
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private BuildingRepository buildingRepository;
 
 	@GetMapping(value = "/api/building/")
 	public List<BuildingDTO> getBuilding(@RequestParam Map<String, Object> conditions,
@@ -36,6 +41,21 @@ public class BuildingAPI {
 		List<BuildingDTO> result = buildingService.findAll(conditions, typeCode);
 		return result;
 
+	}
+
+//	@GetMapping(value = "/api/building/{id}")
+//	public BuildingDTO getBuildingById(@PathVariable Integer id) {
+//		BuildingDTO result = new BuildingDTO();
+//		BuildingEntity building = buildingRepository.findById(id).get();
+//		return result;
+//	}
+
+	@GetMapping(value = "/api/building/{name}/{street}")
+	public BuildingDTO getBuilding(@PathVariable String name,
+									@PathVariable String street) {
+		BuildingDTO result = new BuildingDTO();
+		List<BuildingEntity> building = buildingRepository.findByNameContainingAndStreetContaining(name, street);
+		return result;
 	}
 
 //	public void valiDate(BuildingDTO buildingDTO) throws FieldRequiredException {
@@ -58,13 +78,14 @@ public class BuildingAPI {
 		districtEntity.setId(buildingRequestDTO.getDistrictId());
 		buildingEntity.setDistrict(districtEntity);
 		buildingEntity.setStreet(buildingRequestDTO.getStreet());
-		entityManager.persist(buildingEntity);
+//		entityManager.persist(buildingEntity); //JPA
+		buildingRepository.save(buildingEntity); //Spring-Data-JPA
 	}
 	
 	@PutMapping(value="/api/building/")
 
 	public void updateBuilding(@RequestBody BuildingRequestDTO buildingRequestDTO){
-		BuildingEntity buildingEntity = new BuildingEntity();
+		BuildingEntity buildingEntity = buildingRepository.findById(buildingRequestDTO.getId()).get();
 		buildingEntity.setId(4);
 		buildingEntity.setName(buildingRequestDTO.getName());
 		buildingEntity.setWard(buildingRequestDTO.getWard());
@@ -72,11 +93,11 @@ public class BuildingAPI {
 		districtEntity.setId(buildingRequestDTO.getDistrictId());
 		buildingEntity.setDistrict(districtEntity);
 		buildingEntity.setStreet(buildingRequestDTO.getStreet());
-		entityManager.merge(buildingEntity);
+//		entityManager.merge(buildingEntity); //JPA
+		buildingRepository.save(buildingEntity); //Spring-Data-JPA
 	}
-	@DeleteMapping(value="/api/building/{id}")
-	public void deleteBuilding (@PathVariable Integer id) {
-		BuildingEntity buildingEntity = entityManager.find(BuildingEntity.class, id);
-		entityManager.remove(buildingEntity);
+	@DeleteMapping(value="/api/building/{ids}")
+	public void deleteById (@PathVariable Integer[] ids) {
+		buildingRepository.deleteByIdIn(ids);
 	}
 }

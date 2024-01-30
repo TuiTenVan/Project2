@@ -1,4 +1,4 @@
-package com.javaweb.repository.impl;
+package com.javaweb.repository.Custom.impl;
 
 import com.javaweb.Utils.ConnectionJDBC;
 import com.javaweb.repository.RentAreaRepository;
