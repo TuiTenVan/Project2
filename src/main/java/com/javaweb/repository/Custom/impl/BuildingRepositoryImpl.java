@@ -1,24 +1,22 @@
 package com.javaweb.repository.Custom.impl;
 
-import java.lang.reflect.Field;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.javaweb.builder.BuildingSearchBuilder;
+import com.javaweb.repository.Custom.BuildingRepositoryCustom;
+import com.javaweb.repository.entity.BuildingEntity;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
-
-import com.javaweb.builder.BuildingSearchBuilder;
-import com.javaweb.repository.Custom.BuildingRepositoryCustom;
-import com.javaweb.repository.entity.BuildingEntity;
+import java.lang.reflect.Field;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 @Primary
 public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
-	
+
 	@PersistenceContext
 	private EntityManager entityManager;
 
@@ -95,7 +93,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
 		}
 	}
 	
-	@Override
+//	@Override
 	public List<BuildingEntity> findAll(BuildingSearchBuilder buildingSearchBuilder) {
 	    StringBuilder sql = new StringBuilder("SELECT b.* FROM building b ");
 		joinTable(buildingSearchBuilder, sql);
@@ -106,4 +104,5 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
 		Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
 	    return query.getResultList();
 	}
+
 }
